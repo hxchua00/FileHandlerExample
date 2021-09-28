@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Security;
 
 namespace FileHandlerExample
 {
@@ -17,25 +18,29 @@ namespace FileHandlerExample
             string fileName = @"D:\Temp\SubTemp\TempFile.txt";
 
             // Creates the directory if not there 
-            if (!Directory.Exists(root))
-            {
-                Directory.CreateDirectory(root);
-            }
+            //if (!Directory.Exists(root))
+            //{
+            //    Directory.CreateDirectory(root);
+            //}
+
             // Create a sub directory if not there
-            if (!Directory.Exists(subDir))
-            {
-                Directory.CreateDirectory(subDir);
-            }
+            //if (!Directory.Exists(subDir))
+            //{
+            //    Directory.CreateDirectory(subDir);
+            //}
+
+            // Writing new files
+            // Check if file already exists. If yes, delete it.     
+            //if (File.Exists(fileName))
+            //{
+            //    File.Delete(fileName);
+            //}
 
             try
             {
-                // Writing new files
-                // Check if file already exists. If yes, delete it.     
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-                
+                Directory.CreateDirectory(root);
+                Directory.CreateDirectory(subDir);
+
                 // Create a new file     
                 using (FileStream fs = File.Create(fileName))
                 {
@@ -55,43 +60,63 @@ namespace FileHandlerExample
                         Console.WriteLine(s);
                     }
                 }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Console.WriteLine("Access denied! You do not have the required clearance to view this file!");
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Console.WriteLine("Directory not found! Please check the path and name again!");
-            }
-            catch (DriveNotFoundException)
-            {
-                Console.WriteLine("Drive not found! Please check the path and name again!");
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine("File not found! Please check the path and name again!");
-            }
-            catch (EndOfStreamException)
-            {
-                Console.WriteLine("You have reached the end of the file! Attempt to read even further is impossible!");
-            }
-            catch (PathTooLongException)
-            {
-                Console.WriteLine("Path is too long! Please shorten it!");
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Something went wrong, not sure what yet though.");
-            }
 
-            //Wrting more text to file
-            string textSample = "Creating a bunch of new text lines for fun, gibberbish aofahgoawghoarandow";
-            File.WriteAllText(fileName,textSample);
-            //Reading the file
-            string readFile = File.ReadAllText(fileName);
-            Console.WriteLine(readFile);
-
+                //Wrting more text to file
+                string textSample = "Creating a bunch of new text lines for fun, gibberbish aofahgoawghoarandow";
+                File.WriteAllText(fileName, textSample);
+                //Reading the file
+                string readFile = File.ReadAllText(fileName);
+                Console.WriteLine(readFile);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine("Access denied! You do not have the required clearance to view this file! {0}", e.Message);
+                Console.WriteLine();
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Console.WriteLine("Directory not found! Please check the path and name again!", e.Message);
+                Console.WriteLine();
+            }
+            catch (DriveNotFoundException e)
+            {
+                Console.WriteLine("Drive not found! Please check the path and name again!", e.Message);
+                Console.WriteLine();
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("File not found! Please check the path and name again!", e.Message);
+                Console.WriteLine();
+            }
+            catch (EndOfStreamException e)
+            {
+                Console.WriteLine("You have reached the end of the file! Attempt to read even further is impossible!", e.Message);
+                Console.WriteLine();
+            }
+            catch (PathTooLongException e)
+            {
+                Console.WriteLine("Path is too long! Please shorten it!", e.Message);
+                Console.WriteLine();
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine($"I/O Error occured! {0}", e.Message);
+                Console.WriteLine();
+            }
+            catch (NotSupportedException e)
+            {
+                Console.WriteLine($"File type not supported! {0}", e.Message);
+                Console.WriteLine();
+            }
+            catch (SecurityException e)
+            {
+                Console.WriteLine($"Warning! Security breached! {0}", e.Message);
+                Console.WriteLine();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong, not sure what yet though.", e.Message);
+            }
             Console.ReadLine();
         }
     }
